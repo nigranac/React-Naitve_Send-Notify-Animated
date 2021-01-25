@@ -15,20 +15,62 @@ const App = () => {
   const animate=useRef(new Animated.Value(0)).current
 
   const handlePress=()=>{
-
+    Animated.timing(animate, {
+      toValue: 1,
+      duration: 300
+    }).start()
   }
   const handleSend=()=>{
 
   }
+
+  const widthInterpolate = animate.interpolate({
+    inputRange: [0, .5, 1],
+    outputRange: [150, 150, 300],
+    extrapolate: "clamp"
+  });
+  const inputScaleInterpolate = animate.interpolate({
+    inputRange: [0, .5, .6],
+    outputRange: [0, 0, 1],
+    extrapolate: "clamp"
+  })
+  const sendButtonInterpolate = animate.interpolate({
+    inputRange: [0, .6, 1],
+    outputRange: [0, 0, 1]
+  })
+  const notifyTextScaleInterpolate = animate.interpolate({
+    inputRange: [0, .5],
+    outputRange: [1, 0],
+    extrapolate: "clamp"
+  })
+  const sendButtonStyle = {
+    transform: [{
+      scale: sendButtonInterpolate
+    }]
+  }
+  const notifyTextStyle = {
+    transform: [{
+      scale: notifyTextScaleInterpolate
+    }]
+  }
+  const inputWrapStyle = {
+    transform: [{
+      scale: inputScaleInterpolate
+    }]
+  }
+  const buttonWrapStyle = {
+    width: widthInterpolate,
+  }
   return (
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={handlePress}>
-        <Animated.View style={[styles.buttonWrap]}>
+        <Animated.View style={[styles.buttonWrap,buttonWrapStyle]}>
           {!success && (
             <Animated.View
               style={[
                 StyleSheet.absoluteFill,
                 styles.inputWrap,
+                inputWrapStyle
               ]}>
               <TextInput
                 autoFocus
@@ -38,7 +80,7 @@ const App = () => {
                 style={styles.textInput}
               />
               <TouchableOpacity
-                style={[styles.sendButton]}
+                style={[styles.sendButton,sendButtonStyle]}
                 onPress={handleSend}>
                 <Text style={styles.sendText}>Send</Text>
               </TouchableOpacity>
@@ -46,7 +88,7 @@ const App = () => {
           )}
 
           {!success && (
-            <Animated.View >
+            <Animated.View style={notifyTextStyle} >
               <Text style={styles.notifyText}>Notify Me</Text>
             </Animated.View>
           )}
