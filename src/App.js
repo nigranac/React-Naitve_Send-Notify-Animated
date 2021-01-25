@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState,useRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,16 +11,24 @@ import {
 } from 'react-native';
 
 const App = () => {
+  const[success,setSuccess]=useState(false)
+  const animate=useRef(new Animated.Value(0)).current
+
+  const handlePress=()=>{
+
+  }
+  const handleSend=()=>{
+
+  }
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={this.handlePress}>
-        <Animated.View style={[styles.buttonWrap, buttonWrapStyle]}>
+      <TouchableWithoutFeedback onPress={handlePress}>
+        <Animated.View style={[styles.buttonWrap]}>
           {!success && (
             <Animated.View
               style={[
                 StyleSheet.absoluteFill,
                 styles.inputWrap,
-                inputWrapStyle,
               ]}>
               <TextInput
                 autoFocus
@@ -29,20 +38,20 @@ const App = () => {
                 style={styles.textInput}
               />
               <TouchableOpacity
-                style={[styles.sendButton, sendButtonStyle]}
-                onPress={this.handleSend}>
+                style={[styles.sendButton]}
+                onPress={handleSend}>
                 <Text style={styles.sendText}>Send</Text>
               </TouchableOpacity>
             </Animated.View>
           )}
 
           {!success && (
-            <Animated.View style={notifyTextStyle}>
+            <Animated.View >
               <Text style={styles.notifyText}>Notify Me</Text>
             </Animated.View>
           )}
           {success && (
-            <Animated.View style={thankyouTextStyle}>
+            <Animated.View >
               <Text style={styles.notifyText}>Thank You</Text>
             </Animated.View>
           )}
