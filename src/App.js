@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 
 const App = () => {
@@ -17,16 +18,27 @@ const App = () => {
   const handlePress=()=>{
     Animated.timing(animate, {
       toValue: 1,
-      duration: 300
+      duration: 300,
+      useNativeDriver:true
     }).start()
   }
   const handleSend=()=>{
-
+    setSuccess(true)
+      Animated.sequence([
+        Animated.timing(animate, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver:true
+        
+      }),
+      Animated.delay(1500)
+      ]).start(() => setSuccess(false))
+    
   }
 
   const widthInterpolate = animate.interpolate({
     inputRange: [0, .5, 1],
-    outputRange: [150, 150, 300],
+    outputRange: [1, 1, 2.5],
     extrapolate: "clamp"
   });
   const inputScaleInterpolate = animate.interpolate({
@@ -36,13 +48,17 @@ const App = () => {
   })
   const sendButtonInterpolate = animate.interpolate({
     inputRange: [0, .6, 1],
-    outputRange: [0, 0, 1]
+    outputRange: [0, 0,0.8]
   })
   const notifyTextScaleInterpolate = animate.interpolate({
     inputRange: [0, .5],
     outputRange: [1, 0],
     extrapolate: "clamp"
   })
+  const thankyouScaleInterpolate = animate.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0]
+  });
   const sendButtonStyle = {
     transform: [{
       scale: sendButtonInterpolate
@@ -55,11 +71,18 @@ const App = () => {
   }
   const inputWrapStyle = {
     transform: [{
-      scale: inputScaleInterpolate
+      scaleX: inputScaleInterpolate
     }]
   }
   const buttonWrapStyle = {
-    width: widthInterpolate,
+    transform: [{
+     scaleX: widthInterpolate
+    }]
+  }
+  const thankyouTextStyle = {
+    transform: [{
+      scale: thankyouScaleInterpolate,
+    }]
   }
   return (
     <View style={styles.container}>
@@ -93,7 +116,7 @@ const App = () => {
             </Animated.View>
           )}
           {success && (
-            <Animated.View >
+            <Animated.View style={thankyouTextStyle} >
               <Text style={styles.notifyText}>Thank You</Text>
             </Animated.View>
           )}
@@ -117,7 +140,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 30,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    width:Dimensions.get("screen").width/2.7,
+    height:Dimensions.get("screen").height/12,
+    
   },
   notifyText: {
     color: "#FF7B73",
@@ -130,14 +156,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   textInput: {
-    flex: 4,
+    flex: 5,
+    
+  
   },
   sendButton: {
     backgroundColor: "#FF7B73",
-    flex: 1,
+    // flex: 1,
+    
     borderRadius: 15,
-    paddingHorizontal: 15,
-    paddingVertical: 5,
+    paddingHorizontal: 3,
+    // paddingVertical: 0,
     alignItems: "center",
     justifyContent: "center"
   },
